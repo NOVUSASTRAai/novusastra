@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HttpModule } from '@nestjs/axios'; // Add this import
+import { HttpModule } from '@nestjs/axios';
+import { AuthModule } from './auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [HttpModule], // Add HttpModule here
+  imports: [HttpModule, AuthModule, PassportModule],
   controllers: [AppController],
   providers: [AppService],
 })
