@@ -1,5 +1,6 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -7,12 +8,12 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() body: { username: string; password: string }) {
-    const { username, password } = body;
-    const user = await this.authService.validateUser(username, password);
-    if (user) {
-      const token = await this.authService.generateToken(username);
-      return { access_token: token };
-    }
-    return { message: 'Invalid credentials' };
+    return this.authService.login(body.username, body.password);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('secure')
+  async secure() {
+    return { message: 'This is a secure endpoint', user: { username: 'admin' } };
   }
 }
